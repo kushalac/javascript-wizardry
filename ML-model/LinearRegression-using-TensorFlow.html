@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linear Regression using TensorFlow.js</title>
+  <!-- Include TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <!-- Include Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
+</head>
+<body>
+    <h2>Linear Regression using TensorFlow.js</h2>
+    <label for="inputValue">Enter input value:</label>
+    <input type="number" id="inputValue" step="any">
+    <br>
+    <br>
+    <button onclick="predict()">Predict</button>
+    <br>
+    <br>
+    <div id="output"></div>
+    <div style="height: 500px;width: 500px;">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+    <script>
+        let model;
+        let xs, ys; // Define xs and ys globally for plotting
+        let myChart; // Store the Chart.js instance globally
+
+        // Define a simple linear regression model
+        async function runLinearRegression() {
+            // Generate some synthetic data for training
+            xs = tf.tensor1d([1, 2, 3, 4]);
+            ys = tf.tensor1d([2, 4, 6, 8]);
+
+            // Create a sequential model
+            model = tf.sequential();
+            model.add(tf.layers.dense({units: 1, inputShape: [1]}));
+
+            // Compile the model
+            model.compile({optimizer: 'sgd', loss: 'meanSquaredError'});
+
+            // Train the model with the data
+            await model.fit(xs, ys, {epochs: 100});
+
+            // Plot the initial data and the regression line
+            plotDataAndPredictions();
+        }
+
+        // Function to predict based on user input
+        async function predict() {
+            // Get user input value
+            const inputVal = parseFloat(document.getElementById('inputValue').value);
+
+            // Ensure model is loaded
+            if (!model) {
+                alert('Model not loaded yet. Please wait a moment and try again.');
+                return;
+            }
+
+            // Predict value for user input
+            const output = model.predict(tf.tensor2d([inputVal], [1, 1]));
+            const result = await output.data();
+
+            // Display the predicted output
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `Predicted output for input ${inputVal}: ${result[0]}`;
+
+            // Update the chart with the new prediction point
+            updateChart(inputVal, result[0]);
+
+            // Dispose of tensors to free up memory
+            output.dispose();
+        }
+
+        // Function to plot the initial data and the regression line
+        function plotDataAndPredictions() {
+            const ctx = document.getElementById('myChart').getContext('2d');
+
+            // Prepare data for plotting
+            const xData = xs.arraySync();
+            const yData = ys.arraySync();
+            const lineData = [];
+            xData.forEach(x => {
+                lineData.push({x, y: model.predict(tf.tensor2d([x], [1, 1])).dataSync()[0]});
+            });
+
+            // Define datasets for Chart.js
+            const data = {
+                datasets: [{
+                    label: 'Data Points',
+                    data: xData.map((val, i) => ({x: val, y: yData[i]})),
+                    borderColor: 'blue',
+                    backgroundColor: 'transparent',
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    tension: 0.1
+                }, {
+                    label: 'Regression Line',
+                    data: lineData,
+                    borderColor: 'red',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    tension: 0.1
+                }]
+            };
+
+            // Configure options for Chart.js
+            const options = {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    }
+                }
+            };
+
+            // Create a new Chart instance
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: options
+            });
+        }
+
+        // Function to update the chart with the new prediction point
+        function updateChart(inputVal, prediction) {
+            // Add the new prediction point to the data
+            myChart.data.datasets[0].data.push({x: inputVal, y: prediction});
+            myChart.update();
+        }
+
+        // Run the linear regression function when the page is loaded
+        document.addEventListener('DOMContentLoaded', runLinearRegression);
+
+    </script>
+</body>
+</html>

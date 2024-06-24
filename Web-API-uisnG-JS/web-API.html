@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Operations with Web API</title>
+</head>
+<body>
+    <h1>CRUD Operations with Web API</h1>
+
+    <!-- Create -->
+    <h2>Create</h2>
+    <form id="create-form">
+        <label for="create-name">Name:</label>
+        <input type="text" id="create-name" required>
+        <button type="submit">Create</button>
+    </form>
+
+    <!-- Read -->
+    <h2>Read</h2>
+    <button id="read-button">Read All</button>
+    <ul id="read-list"></ul>
+
+    <!-- Update -->
+    <h2>Update</h2>
+    <form id="update-form">
+        <label for="update-id">ID:</label>
+        <input type="number" id="update-id" required>
+        <label for="update-name">New Name:</label>
+        <input type="text" id="update-name" required>
+        <button type="submit">Update</button>
+    </form>
+
+    <!-- Delete -->
+    <h2>Delete</h2>
+    <form id="delete-form">
+        <label for="delete-id">ID:</label>
+        <input type="number" id="delete-id" required>
+        <button type="submit">Delete</button>
+    </form>
+
+    <script>
+        // Mock API URL
+        const apiUrl = 'https://jsonplaceholder.typicode.com/users';
+        let localUsers = [];
+
+        // Fetch users from the API and update localUsers
+        function fetchUsers() {
+            return fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    localUsers = data;
+                    return localUsers;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Render user list
+        function renderUsers(users) {
+            const readList = document.getElementById('read-list');
+            readList.innerHTML = '';
+            users.forEach(user => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `ID: ${user.id}, Name: ${user.name}`;
+                readList.appendChild(listItem);
+            });
+        }
+
+        // Create
+        document.getElementById('create-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('create-name').value;
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('User created: ' + JSON.stringify(data));
+                document.getElementById('create-name').value = '';
+                localUsers.push(data);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        // Read
+        document.getElementById('read-button').addEventListener('click', function() {
+            renderUsers(localUsers);
+        });
+
+        // Update
+        document.getElementById('update-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('update-id').value;
+            const name = document.getElementById('update-name').value;
+
+            fetch(`${apiUrl}/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('User not found');
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    return fetch(`${apiUrl}/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name: name })
+                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('User updated: ' + JSON.stringify(data));
+                    const userIndex = localUsers.findIndex(user => user.id == id);
+                    if (userIndex !== -1) {
+                        localUsers[userIndex] = data;
+                    }
+                    document.getElementById('update-id').value = '';
+                    document.getElementById('update-name').value = '';
+                })
+                .catch(error => {
+                    alert(error.message);
+                    document.getElementById('update-id').value = '';
+                    document.getElementById('update-name').value = '';
+                });
+        });
+
+        // Delete
+        document.getElementById('delete-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('delete-id').value;
+
+            fetch(`${apiUrl}/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('User not found');
+                    }
+                    return fetch(`${apiUrl}/${id}`, {
+                        method: 'DELETE'
+                    });
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('User deleted');
+                        localUsers = localUsers.filter(user => user.id != id);
+                    } else {
+                        alert('User not found.');
+                    }
+                    document.getElementById('delete-id').value = '';
+                })
+                .catch(error => {
+                    alert(error.message);
+                    document.getElementById('delete-id').value = '';
+                });
+        });
+
+        // Initial fetch and render users
+        fetchUsers().then(users => renderUsers(users));
+    </script>
+</body>
+</html>

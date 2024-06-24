@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookies using JavaScript</title>
+</head>
+<link rel="stylesheet" href="style.css">
+<body>
+    <div class="container">
+        <!-- 
+            A cookie is a small piece of data stored on the user's computer by the web browser while browsing a website. Cookies are used to remember user-specific information, such as login credentials, shopping cart items, and user preferences.
+            When a user visits a website, the server sends a cookie to the browser, which stores it locally. The cookie is then sent back to the server with each subsequent request, allowing the server to identify the user and provide personalized content.
+            We can create, read, and delete cookies using JavaScript. In this example, we will demonstrate how to perform these operations and check cookies using the browser's developer tools.
+         -->
+        <h1>Checking Cookies Using Developer Tools</h1>
+        <p>To check cookies, follow these steps:</p>
+        <ol>
+            <li>Right-click on the page and select "Inspect" or press F12 to open the developer tools.</li>
+            <li>In the developer tools, navigate to the "Application" or "Storage" tab (depending on your browser).</li>
+            <li>Expand the "Cookies" section.</li>
+            <li>You should see a cookie named "username" with the value you entered if it hasn't been deleted.</li>
+            <li>You can delete the cookie by using the provided code and refresh the page to see it disappear.</li>
+        </ol>
+
+        <!-- Input field and buttons for cookie operations -->
+        <input type="text" id="usernameInput" placeholder="Enter username">
+        <button onclick="createCookie()">Create Cookie</button>
+        <button onclick="getCookie()">Get Cookie</button>
+        <button onclick="deleteCookie()">Delete Cookie</button>
+    </div>
+
+    <script>
+        // Function to set a cookie
+        function createCookie() {
+            let username = document.getElementById("usernameInput").value;
+            if (username === "") {
+                alert("Please enter a username.");
+                return;
+            }
+            let name = "username";
+            let value = username;
+            let days = 7;
+            let date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            // Set the cookie with an expiration date
+            // We convert the date to UTC format to ensure consistency across time zones
+            let expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+            console.log("Cookie created:", name, value);
+        }
+
+        // Function to get a cookie by name
+        function getCookie() {
+            let username = document.getElementById("usernameInput").value;
+            if (username === "") {
+                alert("Please enter a username.");
+                return;
+            }
+            let name = "username";
+            let ca = document.cookie.split(';');
+            // Loop through all cookies to find the one with the specified name
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                // Remove leading spaces from the cookie string
+                // Check if the cookie starts with the specified name
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(name + "=") == 0) {
+                    let value = c.substring(name.length + 1, c.length);
+                    console.log("Cookie value:", value);
+                    return;
+                }
+            }
+            console.log("Cookie not found.");
+        }
+
+        // Function to delete a cookie by name
+        function deleteCookie() {
+            let username = document.getElementById("usernameInput").value;
+            if (username === "") {
+                alert("Please enter a username.");
+                return;
+            }
+            let name = "username";
+            if (!cookieExists(name)) {
+                console.log("Cookie with this username doesn't exist.");
+                return;
+            }
+            // Set the expiration date to a past date to delete the cookie
+            document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            console.log("Cookie deleted with name:", username);
+        }
+
+        // Function to check if a cookie exists
+        function cookieExists(name) {
+            let ca = document.cookie.split(';');
+            // Loop through all cookies to find the one with the specified name
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                // Remove leading spaces from the cookie string
+                // Check if the cookie starts with the specified name
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(name + "=") == 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
