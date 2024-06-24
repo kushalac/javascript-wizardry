@@ -22,10 +22,17 @@ Have you ever wanted to customize the look of your favorite websites? With **Col
 
 ## Installation
 
-1. Clone or download this repository to your local machine.
-2. Open Chrome and navigate to `chrome://extensions/`.
-3. Enable "Developer mode" in the top right corner.
-4. Click "Load unpacked" and select the directory where you cloned/downloaded the repository and remember to remove this README.md file.
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/kushalac/javascript-wizardry.git
+    ```
+2. Navigate to the project directory:
+    ```bash
+    cd javascript-wizardry/simple-background-changer-extension
+    ```
+3. Open Chrome and navigate to `chrome://extensions/`.
+4. Enable "Developer mode" in the top right corner.
+5. Click "Load unpacked" and select the directory where you cloned/downloaded the repository and remember to remove this README.md file.
 
 ## Usage
 
