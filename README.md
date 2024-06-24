@@ -8,4 +8,4 @@ This repository contains a collection of JavaScript applications and projects de
     - [Web-API-using-JS](#Web-API-CRUD-using-JS)
     - [WebGL-JS-API](#WebGL-JS-API)
     - [WebScraping-using-JS](#WebScraping-using-JS)
-    - [Simple Background Changer Extension](#Simple Background Changer Extension)
+    - [Simple Background Changer Extension](#simple-background-changer-extension)
