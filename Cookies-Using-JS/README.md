@@ -1,6 +1,6 @@
 # Cookies-Using-JS
 
-This project demonstrates how to create, read, and delete cookies using JavaScript. Cookies are small pieces of data stored on the user's computer by the web browser while browsing a website. They are used to remember user-specific information, such as login credentials, shopping cart items, and user preferences.
+This project demonstrates how to create, read, and delete cookies using JavaScript. Cookies are small pieces of data stored on the user's computer by the web browser while browsing a website. They remember user-specific information, such as login credentials, shopping cart items, and user preferences.
 
 ## Table of Contents
 
@@ -11,7 +11,6 @@ This project demonstrates how to create, read, and delete cookies using JavaScri
     - [Installation](#installation)
 4. [Usage](#usage)
 5. [Contributing](#contributing)
-6. [License](#license)
 
 ## Introduction
 
@@ -33,17 +32,17 @@ To run this project, you need a web browser.
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/javascript-wizardry.git
+    git clone https://github.com/kushalac/javascript-wizardry.git
     ```
 2. Navigate to the project directory:
     ```bash
     cd javascript-wizardry/Cookies-Using-JS
     ```
-3. Open the `index.html` file in your web browser.
+3. Open the `Cookies-using-js.html` file in your web browser.
 
 ## Usage
 
-1. Open the `index.html` file in your web browser.
+1. Open the `Cookies-using-js.html` file in your web browser.
 2. Enter a username in the input field.
 3. Click the "Create Cookie" button to create a cookie with the entered username.
 4. Click the "Get Cookie" button to retrieve and display the value of the cookie.
@@ -68,7 +67,3 @@ Contributions are welcome! If you have any suggestions, improvements, or additio
 3. Commit your changes (`git commit -am 'Add new feature'`).
 4. Push to the branch (`git push origin feature-branch`).
 5. Create a new Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
